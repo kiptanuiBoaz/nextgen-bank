@@ -10,6 +10,9 @@ down:
 down-v:
 	docker compose -f local.yml down -v
 
+all-logs:
+	docker compose -f local.yml logs
+
 banker-config:
 	docker compose -f local.yml  config
 

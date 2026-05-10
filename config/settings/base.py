@@ -152,6 +152,28 @@ SPECTACULAR_SETTINGS = {
     "LICENCE": {"name": "MIT LIcence", "url": "https://opensourse.org/license/mit"},
 }
 
+if USE_TZ:
+    CELERY_TIMEZONE = TIME_ZONE
+
+CELERY_BROKER_URL = getenv("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = getenv("CELERY_RESULT_BACKEND")
+CELERY_ACCEPT_CONTENT = ["application/json"]
+# format of the messages sent to the queue
+CELERY_TASK_SERIALIZER = "json"
+# format of the messages received from the queue
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_RESULT_BACKEND_MAX_RETRIES = 10
+# track tasks before being consumed by workers
+CELERY_TASK_SEND_SENT_EVENT = True
+# extended task result attribute (send all retries,names kwargs and delivery infor to be written tro the backend)
+CELERY_RESULT_EXTENDED = True
+CELERY_RESULT_BACKEND_ALWAYS_RETRY = True
+CELERY_TASK_TIME_LIMIT = 5 * 60
+CELERY_TASK_SOFT_TIME_LIMIT = 60
+# store and retrieve sheduled tasks backend
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+CELERY_WORKER_SEND_TASK_EVENTS = True
+
 LOGGING_CONFIG = None
 
 

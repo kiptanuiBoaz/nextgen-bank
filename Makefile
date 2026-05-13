@@ -36,3 +36,9 @@ network-inspect:
 
 banker-db:
 	docker compose -f local.yml  exec postgres psql -U kiptanuiboaz -d banker
+
+venv-create:
+	python3 -m venv venv 
+
+venv-activate:
+	source venv/bin/activate

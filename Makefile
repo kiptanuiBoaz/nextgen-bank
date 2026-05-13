@@ -37,8 +37,8 @@ network-inspect:
 banker-db:
 	docker compose -f local.yml  exec postgres psql -U kiptanuiboaz -d banker
 
-venv-create:
+create-env:
 	python3 -m venv venv 
 
-venv-activate:
-	source venv/bin/activate
+secret:
+	python -c "import secrets; print(secrets.token_urlsafe(38))"

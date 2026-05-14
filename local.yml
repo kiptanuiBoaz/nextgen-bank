@@ -60,6 +60,11 @@ services:
     
     rabbitmq:
         image: rabbitmq:3-management
+        healthcheck:
+            test: ["CMD", "rabbitmq-diagnostics", "ping"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
         ports:
             - "5672:5672"
             - "15672:15672"
@@ -79,6 +84,9 @@ services:
             - "5555:5555"
         volumes:
             - flower_db:/app/flower_db
+        depends_on:
+            rabbitmq:
+                condition: service_healthy
         command: /start-flower.sh
     
     celerybeat:

@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from djoser.views import TokenCreateView
-from djoser.views import User
+
 from loguru import logger
 from rest_framework import permissions, status
 from rest_framework.response import Response
@@ -14,6 +14,8 @@ from rest_framework_simplejwt.views import TokenRefreshView
 
 from .emails import send_otp_email
 from .utils import generate_otp
+
+User = get_user_model()
 
 
 def set_auth_cookies(

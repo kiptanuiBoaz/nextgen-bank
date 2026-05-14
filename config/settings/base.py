@@ -17,7 +17,6 @@ APP_DIR = BASE_DIR / "core_apps"
 
 localenv_file = path.join(BASE_DIR, ".envs", "env.local")
 
-
 # Application definition
 
 DJANGO_APPS = [
@@ -63,10 +62,11 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [str(BASE_DIR / "templates")],
+        "DIRS": [str(APP_DIR / "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
+                "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
@@ -76,7 +76,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "config.wsgi.application"
-
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
@@ -242,6 +241,7 @@ cloudinary.config(
     api_secret=CLOUDINARY_API_SECRET,
 )
 
+
 COOKIE_NAME = "access"
 
 COOKIE_SAMESITE = "Lax"
@@ -253,7 +253,6 @@ COOKIE_HTTPONLY = True
 COOKIE_SECURE = getenv("COOKIE_SECURE", "True") == "True"
 
 LOGGING_CONFIG = None
-
 
 LOGURU_LOGGING = {
     "handlers": [

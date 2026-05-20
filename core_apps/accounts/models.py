@@ -50,7 +50,7 @@ class BankAccount(TimeStampedModel):
     is_primary = models.BooleanField(_("Primary Account"), default=False)
     kyc_submitted = models.BooleanField(_("KYC Submitted"), default=False)
     kyc_verified = models.BooleanField(_("KYC Verified"), default=False)
-    erified_by = models.ForeignKey(
+    verified_by = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
         blank=True,

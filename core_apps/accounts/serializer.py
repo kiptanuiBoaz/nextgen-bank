@@ -1,0 +1,46 @@
+from winreg import KEY_CREATE_SUB_KEY
+
+from django.utils.translation import gettext_lazy as _
+from rest_framework import serializers
+from .models import BankAccount
+
+
+class AccountVerificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BankAccount
+        fields = [
+            "kyc_submitted",
+            "kyc_verified",
+            "verification_date",
+            "fully_activated",
+            "account_status",
+            "verification_notes",
+        ]
+
+        read_only_fields = ["fully_activated"]
+
+        def validate(self, data: dict) -> dict:
+            kyc_verified = data.get("kyc_verified")
+            kyc_submitted = data.get("kyc_submitted")
+            verification_date = data.get("verification_date")
+            verification_notes = data.get("verification_notes")
+
+            if kyc_submitted:
+                if not verification_date:
+                    raise serializers.ValidationError(
+                        _("Verification date is required whenb verifying an account")
+                    )
+
+                if not verification_notes:
+                    raise serializers.ValidationError(
+                        _("Verification notes are required when verifying an account")
+                    )
+
+            if kyc_submitted and not all(
+                [kyc_submitted, verification_date, verification_notes]
+            ):
+                raise serializers.ValidationError(
+                    _(
+                        "All verification fields (KYC submitted, verification date, verification notes) are required when verifying an account"
+                    )
+                )

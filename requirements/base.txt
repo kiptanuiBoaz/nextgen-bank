@@ -24,4 +24,5 @@ redis==5.0.3
 celery==5.3.6
 flower==2.0.1
 django-redis==5.4.0
+django-stubs==6.0.4
 

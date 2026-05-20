@@ -42,7 +42,12 @@ THIRD_PARTY_APPS = [
     "djcelery_email",
 ]
 
-LOCAL_APPS = ["core_apps.common", "core_apps.user_auth", "core_apps.user_profile"]
+LOCAL_APPS = [
+    "core_apps.common",
+    "core_apps.user_auth",
+    "core_apps.user_profile",
+    "core_apps.accounts",
+]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
@@ -124,7 +129,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Africa/Nairobi"
 
 USE_I18N = True
 
@@ -233,6 +238,13 @@ CELERY_WORKER_SEND_TASK_EVENTS = True
 CLOUDINARY_API_KEY = getenv("CLOUDINARY_API_KEY")
 CLOUDINARY_API_SECRET = getenv("CLOUDINARY_API_SECRET")
 CLOUDINARY_CLOUD_NAME = getenv("CLOUDINARY_CLOUD_NAME")
+
+SITE_URL = getenv("SITE_URL")
+BANK_CODE = getenv("BANK_CODE")
+BANK_BRANCH_CODE = getenv("BANK_BRANCH_CODE")
+CURRENCY_CODE_KES = getenv("CURRENCY_CODE_KES")
+CURRENCY_CODE_USD = getenv("CURRENCY_CODE_USD")
+CURRENCY_CODE_GBP = getenv("CURRENCY_CODE_GBP")
 
 
 cloudinary.config(

@@ -13,6 +13,9 @@ down-v:
 all-logs:
 	docker compose -f local.yml logs
 
+api-logs:
+	docker compose -f local.yml logs api
+
 banker-config:
 	docker compose -f local.yml  config
 

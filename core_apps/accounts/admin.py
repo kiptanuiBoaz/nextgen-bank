@@ -60,7 +60,6 @@ class BankAccountAdmin(admin.ModelAdmin):
                     "kyc_submitted",
                     "kyc_verified",
                     "verification_date",
-                    "verification_dater",
                     "fully_activated",
                     "verification_notes",
                 )
@@ -76,7 +75,7 @@ class BankAccountAdmin(admin.ModelAdmin):
     )
 
     def get_verified_by(self, obj):
-        return obj.verification_by.full_name if obj.verified_by else "_"
+        return obj.verified_by.full_name if obj.verified_by else "_"
 
     get_verified_by.short_description = _("Verified By")
     get_verified_by.admin_order_field = "verified_by__first_name"

@@ -61,9 +61,18 @@ class BankAccount(TimeStampedModel):
         _("Verification Date"), null=True, blank=True
     )
 
+    verification_date = models.DateTimeField(
+        _("Verification Date"), null=True, blank=True
+    )
+    verification_notes = models.TextField(_("Verification Notes"), blank=True)
+    fully_activated = models.BooleanField(
+        _("Fully Activated"),
+        default=False,
+    )
+
     # string representation
-    def __str__(self) -> str:
-        return f"{self.user.full_name}'s{self.get_currency_display()} - {self.get_account_type_display()} - Account - {self.self.account_number}"
+    # def __str__(self) -> str:
+    #     return f"{self.user.full_name}'s{self.get_currency_display()} - {self.get_account_type_display()} - Account - {self.self.account_number}"
 
     class Meta:
         verbose_name = _("Bank Account")

@@ -7,6 +7,9 @@ up:
 down:
 	docker compose -f local.yml down
 
+restart:
+	docker compose -f local.yml restart
+
 down-v:
 	docker compose -f local.yml down -v
 

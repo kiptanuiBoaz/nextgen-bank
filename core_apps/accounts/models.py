@@ -36,6 +36,7 @@ class BankAccount(TimeStampedModel):
     currency = models.CharField(
         _("Currency"), max_length=20, choices=AccountCurrency.choices
     )
+
     account_status = models.CharField(
         _("Account Status"),
         max_length=10,

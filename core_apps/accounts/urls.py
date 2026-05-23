@@ -1,10 +1,11 @@
 from django.urls import path
-from . import views
+from .views import AccountVerificationView, DepositView
 
 urlpatterns = [
     path(
         "verify/<uuid:pk>/",
-        views.AccountVerificationView.as_view(),
+        AccountVerificationView.as_view(),
         name="account_verfication",
     ),
+    path("deposit/", DepositView.as_view(), name="account_deposit"),
 ]

@@ -191,3 +191,67 @@ def send_transfer_otp_email(email, otp) -> None:
         logger.info(f"OTP email sent successfully to: {email}")
     except Exception as e:
         logger.error(f"Failed to send OTP email to  {email}. Error: {str(e)}")
+
+
+def send_transfer_email(
+    sender_name,
+    sender_email,
+    receiver_name,
+    receiver_email,
+    amount,
+    currency,
+    sender_new_balance,
+    receiver_new_balance,
+    sender_account_number,
+    receiver_account_number,
+) -> None:
+    subject = _("Transfer Notification")
+    from_email = settings.DEFAULT_FROM_EMAIL
+
+    common_context = {
+        "amount": amount,
+        "currency": currency,
+        "sender_account_number": sender_account_number,
+        "receiver_account_number": receiver_account_number,
+        "sender_name": sender_name,
+        "receiver_name": receiver_name,
+        "site_name": settings.SITE_NAME,
+    }
+
+    sender_context = {
+        **common_context,
+        "user": sender_name,
+        "is_sender": True,
+        "new_balance": sender_new_balance,
+    }
+    sender_html_email = render_to_string(
+        "emails/transfer_notification.html", sender_context
+    )
+    sender_plain_email = strip_tags(sender_html_email)
+    sender_email_obj = EmailMultiAlternatives(
+        subject, sender_plain_email, from_email, [sender_email]
+    )
+    sender_email_obj.attach_alternative(sender_html_email, "text/html")
+    receiver_context = {
+        **common_context,
+        "user": receiver_name,
+        "is_sender": False,
+        "new_balance": receiver_new_balance,
+    }
+    receiver_html_email = render_to_string(
+        "emails/transfer_notification.html", receiver_context
+    )
+    receiver_plain_email = strip_tags(receiver_html_email)
+    receiver_email_obj = EmailMultiAlternatives(
+        subject, receiver_plain_email, from_email, [receiver_email]
+    )
+    receiver_email_obj.attach_alternative(receiver_html_email, "text/html")
+    try:
+        sender_email_obj.send()
+        receiver_email_obj.send()
+        logger.info(
+            f"Transfer notification emails sent to sender: {sender_email} and receiver: "
+            f"{receiver_email}"
+        )
+    except Exception as e:
+        logger.error(f"Failed to send transfer notification emails. Error: {str(e)}")

@@ -212,7 +212,7 @@ class SecurityQuestionSerializer(serializers.ModelSerializer):
         return data
 
 
-class OTPVerifidciationSerializer(serializers.ModelSerializer):
+class OTPVerificationSerializer(serializers.ModelSerializer):
     otp = serializers.CharField(max_length=6)
 
     def validate(self, data: dict) -> dict:

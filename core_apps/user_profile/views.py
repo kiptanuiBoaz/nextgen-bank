@@ -13,6 +13,7 @@ from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.request import Request
 
+from core_apps.accounts.pagination import StandardResultsSetPagination
 from core_apps.common.models import ContentView
 from core_apps.common.permissions import IsBranchManager
 
@@ -21,12 +22,6 @@ from core_apps.accounts.models import BankAccount
 from core_apps.common.renderer import GenericJSONRenderer
 from .models import NextOfKin, Profile
 from .serializers import NextOfKinSerializer, ProfileListSerializer, ProfileSerializer
-
-
-class StandardResultsSetPagination(PageNumberPagination):
-    page_size = 10
-    page_size_query_param = "page_size"
-    max_page_size = 100
 
 
 class ProfileListAPIView(generics.ListAPIView):
@@ -156,7 +151,7 @@ class ProfileDetailAPIView(generics.RetrieveUpdateAPIView):
 
 class NextOfKinAPIView(generics.ListCreateAPIView):
     serializer_class = NextOfKinSerializer
-    pagination_class = StandardResultsSetPagination
+    pagination_class = StandardResultsSetPagination()
     renderer_classes = [GenericJSONRenderer]
     object_label = "next_of_kin"
 

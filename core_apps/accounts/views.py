@@ -500,7 +500,7 @@ class VerifyOTPView(generics.CreateAPIView):
 class TransactionListAPIView(generics.ListAPIView):
     serializer_class = TransactionSerializer
     pagination_class = StandardResultsSetPagination
-    filter_backends = ([DjangoFilterBackend, OrderingFilter],)
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
     ordering_fields = ["created_at", "amount"]
     ordering = ["-created_at"]
 

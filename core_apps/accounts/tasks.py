@@ -109,6 +109,8 @@ def generate_transaction_pdf(user_id, start_date, end_date, account_number=None)
                 ("FONTNAME", (0, 1), (-1, -1), "Helvetica"),
                 ("BOTTOMPADDING", (0, 1), (-1, -1), 6),
                 ("WORDWRAP", (0, 0), (-1, -1), True),
+                ("FONTSIZE", (0, 1), (-1, -1), 10),
+                ("TOPADDING", (0, 1), (-1, -1), 6),
             ]
         )
 
@@ -135,6 +137,7 @@ def generate_transaction_pdf(user_id, start_date, end_date, account_number=None)
         try:
             email.send()
             logger.info(f"Transaction PDF sent successfully to user {user_id}")
+            return f"Transaction PDF sent successfully to user {user_id}"
         except Exception as e:
             logger.error(
                 f"Error sending transaction PDF email to user {user_id}: {str(e)}"

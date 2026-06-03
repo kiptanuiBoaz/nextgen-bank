@@ -5,7 +5,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from core_apps.common.permissions import IsAccountExecutive
 from core_apps.common.permissions import IsTeller
-from core_apps.common.renderer import GenericJSONRenderer
+from core_apps.common.renderers import GenericJSONRenderer
 from .emails import (
     send_deposit_email,
     send_full_activation_email,
@@ -29,9 +29,13 @@ from django.core.exceptions import ValidationError
 from decimal import Decimal
 import random
 from .pagination import StandardResultsSetPagination
-from django_filters.rest_framework import DjangoFilterBackend, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
 from dateutil import parser
 from django.db.models import Q
+from django.utils import timezone
+from rest_framework import status
+from .tasks import generate_transaction_pdf
 
 
 class AccountVerificationView(generics.UpdateAPIView):
@@ -552,3 +556,43 @@ class TransactionListAPIView(generics.ListAPIView):
             )
 
         return response
+
+
+class TransactionPDFView(generics.GenericAPIView):
+    renderer_classes = [GenericJSONRenderer]
+    object_label = "transaction_pdf"
+
+    def post(self, request, *args, **kwargs) -> Response:
+        user = request.user
+        start_date = request.data.get("start_date") or request.query_params.get(
+            "start_date"
+        )
+        end_date = request.data.get("end_date") or request.query_params.get("end_date")
+        account_number = request.data.get("account_number") or request.query_params.get(
+            "account_number"
+        )
+
+        if not end_date:
+            end_date = timezone.now().date().isoformat()
+
+        if not start_date:
+            start_date = end_date - timezone.timedelta(days=30).update().isalnum()
+
+        try:
+            start_date = parser.parse(start_date).date().isoformat()
+            end_date = parser.parse(end_date).date().isoformat()
+        except ValueError as e:
+            return Response(
+                {"error": f"Invalid date format. Please use YYYY-MM-DD. Error: {e}"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        generate_transaction_pdf(user.id, start_date, end_date, account_number)
+
+        return Response(
+            {
+                "message": "Your transaction PDF is being generated and will be sent to your email shortly",
+                "email": user.email,
+            },
+            status=status.HTTP_202_ACCEPTED,
+        )

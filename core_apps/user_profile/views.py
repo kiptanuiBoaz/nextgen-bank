@@ -19,7 +19,7 @@ from core_apps.common.permissions import IsBranchManager
 
 from core_apps.accounts.utils import create_bank_account
 from core_apps.accounts.models import BankAccount
-from core_apps.common.renderer import GenericJSONRenderer
+from core_apps.common.renderers import GenericJSONRenderer
 from .models import NextOfKin, Profile
 from .serializers import NextOfKinSerializer, ProfileListSerializer, ProfileSerializer
 

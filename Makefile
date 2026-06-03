@@ -47,4 +47,4 @@ create-env:
 	python3 -m venv venv 
 
 secret:
-	python -c "import secrets; print(secrets.token_urlsafe(38))"
+	python -c "import secrets; print(secrets.token_urlsafe(20))"

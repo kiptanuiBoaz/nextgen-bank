@@ -235,6 +235,17 @@ CELERY_TASK_SOFT_TIME_LIMIT = 60
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_WORKER_SEND_TASK_EVENTS = True
 
+CELERY_BEAT_SCHEDULE = {
+    "apply-daily-interest": {
+        "task": "core_apps.accounts.tasks.apply_daily_interest",
+        # "schedule": timedelta(days=1),
+    },
+    "detect-suspicious-activity": {
+        "task": "core_apps.accounts.tasks.detect_suspicious_activities",
+        # "schedule": timedelta(hours=1),
+    },
+}
+
 
 CLOUDINARY_API_KEY = getenv("CLOUDINARY_API_KEY")
 CLOUDINARY_API_SECRET = getenv("CLOUDINARY_API_SECRET")

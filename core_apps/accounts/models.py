@@ -1,3 +1,4 @@
+from decimal import ROUND_HALF_UP, Decimal
 from locale import currency
 from unittest.util import _MAX_LENGTH
 
@@ -6,6 +7,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
+from loguru import logger
 
 from core_apps.common.models import TimeStampedModel
 
@@ -70,6 +72,52 @@ class BankAccount(TimeStampedModel):
         _("Fully Activated"),
         default=False,
     )
+    interest_rate = models.DecimalField(
+        _("Interest Rate (%)"),
+        decimal_places=4,
+        max_digits=5,
+        default=0.00,
+        help_text=_("Annual interest rate for savings accounts"),
+    )
+
+    @property
+    def annual_interest_rate(self):
+        if self.account_type != self.AccountType.SAVINGS:
+
+            return Decimal("0.0000")
+
+        balance = self.account_balance
+        if balance <= Decimal("100000"):
+            return Decimal("0.0050")
+        elif Decimal("500000") <= balance < Decimal("500000"):
+            return Decimal("0.0100")
+        else:
+            return Decimal("0.0150")
+
+    def apply_daily_interest(self):
+        if self.account_type == self.AccountType.SAVINGS:
+            daily_rate = self.annual_interest_rate / Decimal("365")
+            interest = (Decimal(self.account_balance) * daily_rate).quantize(
+                Decimal("0.01"), rounding=ROUND_HALF_UP
+            )
+        logger.info(
+            f"Applying daily interest for account {self.account_number}. "
+            f"Balance: {self.account_balance}, Interest: {interest}"
+        )
+        self.account_balance += interest
+        self.save()
+
+        Transaction.objects.create(
+            user=self.user,
+            amount=interest,
+            description=f"Daily interest for {self.get_account_type_display()} account applied",
+            transaction_type=Transaction.TransactionType.INTEREST,
+            status=Transaction.TransactionStatus.COMPLETED,
+            sender=None,
+            receiver=self.user,
+            sender_account=None,
+            receiver_account=self,
+        )
 
     # string representation
     # def __str__(self) -> str:
